@@ -3,9 +3,9 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
-from numbify import NumberEntry
+from gui_numbify import NumberEntry
 
-class askForSteps(Gtk.Window):
+class askForSteps(Gtk.Dialog):
     def __init__(self, parent):
         super().__init__(title="Antes de iniciar", transient_for=parent)
 
@@ -26,6 +26,7 @@ class askForSteps(Gtk.Window):
         # Boton - Confirmar pasos
         self.btn_steps_confirmation = Gtk.Button(label="Confirmar Datos [✔]")
         self.btn_steps_confirmation.set_sensitive(False)
+        self.btn_steps_confirmation.connect("clicked", self.confirmSteps)
 
         # Box - Pasos
         box_steps = Gtk.Box(spacing=5)
@@ -66,7 +67,8 @@ class askForSteps(Gtk.Window):
         box.pack_start(box_info,True,True,0)
         box.pack_start(box_confirmation,True,True,0)
 
-        self.add(box)
+        box_dialog = self.get_content_area()
+        box_dialog.add(box)
 
         self.show_all()
 
@@ -75,3 +77,8 @@ class askForSteps(Gtk.Window):
             self.btn_steps_confirmation.set_sensitive(False)
         else:
             self.btn_steps_confirmation.set_sensitive(True)
+    
+    def confirmSteps(self, widget):
+        self.steps = self.ent_steps.get_text()
+        self.destroy()
+        return self.ent_steps.get_text()

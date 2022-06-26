@@ -13,19 +13,17 @@ class About(Gtk.Dialog):
         self.set_border_width(5)
 
         # Labels
-        lbl_projectName = Gtk.Label(label = "Evaluatron")
+        lbl_projectName = Gtk.Label(label = "SIR Pymulator")
         lbl_projectVersion = Gtk.Label(label = "v 1.0")
 
         lbl_projectInfo = Gtk.Label()
-        lbl_projectInfo.set_text("Este proyecto es en básicas palabras un generador de escala de notas con un evaluador automático que funciona de acuerdo a la escala de notas generada.")
+        lbl_projectInfo.set_text("Este es un simulador que sigue el modelo SIR para pronosticar la propagación de una enfermedad en una comunidad dado ciertos parámetros.")
         lbl_projectInfo.set_line_wrap(True)
 
         lbl_projectAuthor = Gtk.Label(label = "Creado por Angel Guerrero y Yostin Sepulveda")
 
-        btn_authorPage = Gtk.Button()
+        btn_authorPage = Gtk.Button(label="[⏣]  GitHub  [⏣]")
         btn_authorPage.connect("clicked", self.openGit)
-        img_github = Gtk.Image().new_from_file("files/images/github.png")
-        btn_authorPage.set_image(img_github)
 
         # Agregación
         box = Gtk.Box(orientation = 1, spacing=20)

@@ -3,9 +3,10 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
-from about import About
-from numbify import NumberEntry
-from stepsWindow import askForSteps
+from gui_about import About
+from gui_numbify import NumberEntry
+from gui_stepsWindow import askForSteps
+from sim_runner import simulatorStarter
 
 class Core(Gtk.Window):
     def __init__(self):
@@ -17,7 +18,7 @@ class Core(Gtk.Window):
         self.set_resizable(False)
 
         # Boton - About
-        btn_about = Gtk.Button(label="[?]")
+        btn_about = Gtk.Button(label="[ i ]")
         btn_about.connect("clicked", self.aboutShow)
 
         # Boton - Resize
@@ -25,7 +26,7 @@ class Core(Gtk.Window):
         btn_resize.connect("clicked", self.resize)
     
         # HeaderBar
-        self.header = Gtk.HeaderBar(title = "Nombre del proyecto I")
+        self.header = Gtk.HeaderBar(title = "SIR Pymulator")
         self.header.set_subtitle("Listo para iniciar simulación")
         self.header.props.show_close_button = True
 
@@ -35,13 +36,14 @@ class Core(Gtk.Window):
         self.set_titlebar(self.header)
 
         # Boton - Iniciar Simulacion
-        btn_start = Gtk.Button(label="⋄ Iniciar ⋄")
+        btn_start = Gtk.Button(label="Iniciar Simulación [⊳]")
         btn_start.connect("clicked", self.start)
 
         # Labels
         '''Comunidad'''
         self.lbl_community = Gtk.Label()
         self.lbl_community.set_markup("<b><big>Comunidad</big></b>")
+        #"<span foreground='green'>%.2f</span>"
 
         self.lbl_community_name = Gtk.Label(label="Nombre de la comunidad")
         self.lbl_community_population = Gtk.Label(label="Población")
@@ -69,7 +71,7 @@ class Core(Gtk.Window):
         self.ent_community_promContact.set_input_purpose(2)
         self.ent_community_promContact.connect("changed", self.updateLabelStatus)
 
-        self.ent_community_probContact = NumberEntry()
+        self.ent_community_probContact = NumberEntry(limit=100)
         self.ent_community_probContact.set_input_purpose(2)
         self.ent_community_probContact.connect("changed", self.updateLabelStatus)
 
@@ -78,13 +80,14 @@ class Core(Gtk.Window):
         self.ent_community_initialInfected.connect("changed", self.updateLabelStatus)
 
         '''Enfermedad'''
-        self.ent_disease_probInfection = NumberEntry()
+        self.ent_disease_probInfection = NumberEntry(limit=100)
         self.ent_disease_probInfection.set_input_purpose(2)
         self.ent_disease_probInfection.connect("changed", self.updateLabelStatus)
 
-        self.ent_disease_stepsEvolution = NumberEntry()
+        self.ent_disease_stepsEvolution = NumberEntry(limit=100)
         self.ent_disease_stepsEvolution.set_input_purpose(2)
         self.ent_disease_stepsEvolution.connect("changed", self.updateLabelStatus)
+
 
         parameters_community = [self.lbl_community,
                                 self.lbl_community_name,
@@ -120,6 +123,7 @@ class Core(Gtk.Window):
                        self.lbl_disease_probInfection,
                        self.lbl_disease_stepsEvolution]
 
+
         # Treeview - Visor resultados resumidos
         self.lss_results = Gtk.ListStore(int,   # Paso
                                          int,   # Casos Activos
@@ -139,7 +143,6 @@ class Core(Gtk.Window):
             column = Gtk.TreeViewColumn(column_title, renderer, text=i)
             trv_results.append_column(column)
 
-        # Contenedores
         """Contenedor de parametros"""
         box_parameters_community = Gtk.Box(orientation = 1, spacing = 5)
         for widget in parameters_community:
@@ -150,7 +153,7 @@ class Core(Gtk.Window):
         for widget in parameters_disease:
             box_parameters_disease.pack_start(widget,False,True,2)
 
-        box_parameters = Gtk.Box(orientation = 1, spacing = 40)
+        box_parameters = Gtk.Box(orientation = 1, spacing = 20)
         box_parameters.pack_start(box_parameters_community,True,True,0)
         box_parameters.pack_start(box_parameters_disease,True,True,0)
         box_parameters.pack_start(btn_start,True,True,0)
@@ -195,8 +198,17 @@ class Core(Gtk.Window):
     def start(self,widget):
         if self.checkEsencials():
             self.header.set_subtitle("Comprobado")
-            self.steps = askForSteps(self)
-        
+            
+            stepsAsker = askForSteps(self)
+            dialogRunner = stepsAsker.run()
+
+            self.steps = stepsAsker.steps
+            new_status = str("Ejecutando "+str(self.steps)+" pasos en: "+self.ent_community_name.get_text())
+
+            self.header.set_subtitle(new_status)
+
+            self.simulation = simulatorStarter(self.entrys,self.steps)
+
         else:
             self.header.set_subtitle("Revisa los parámetros")
 
