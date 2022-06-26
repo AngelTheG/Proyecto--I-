@@ -1,3 +1,5 @@
+from random import randrange
+
 class Citizen():
     def __init__(self,id_number,
                       community,
@@ -7,7 +9,6 @@ class Citizen():
         self.id_number = id_number
         self.community = community
         self.disease = disease
-        self.family = None
         self.status = False
         self.inmune = False
         self.infection_date = "Nunca fué infectado"
@@ -28,20 +29,38 @@ class Citizen():
 
     # Fun - Infectar
     def infect(self,step):
-        if not self.inmune:
-            self.infection_date = int(step)
-            self.inmune = True
-            self.status = True
+        self.infection_date = step
+        self.inmune = True
+        self.status = True
+        print("Ciudadano [",self.id_number,"] infectado en el paso: ",self.infection_date)
     
+    # FUN - Intentar infeccion
+    def attempt_infect(self):
+        attempt_randnumber = randrange(100)
+        if not self.inmune:
+            if attempt_randnumber < self.disease.get_prob():
+                self.infect(self.community.get_step())
+
+    # Fun - Infectar grupo cercano
+    def infect_buddies(self):
+        for buddy in self.buddies:
+            buddy.attempt_infect()
+
     # Fun - Actualizar estado infeccioso del ciudadano
     def evolve(self):
         if self.status:
             print("EVOLUCION DE LA ENFERMEDAD EN CASO DE PADECERLA")
 
-    """ GETTERS & SETTERS"""
+    """ GETTERS """
     def get_id(self):
         return self.id_number
 
     def get_buddies(self):
         return self.buddies
+
+    def get_status(self):
+        return self.status
+
+    def get_inmune(self):
+        return self.inmune
 

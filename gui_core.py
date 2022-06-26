@@ -7,7 +7,7 @@ from gui_about import About
 from gui_numbify import NumberEntry
 from gui_stepsWindow import askForSteps
 from sim_runner import simulatorStarter
-
+#.set_markup("<span foreground='green'>CADENA DE TEXTO</span>")
 class Core(Gtk.Window):
     def __init__(self):
 
@@ -43,19 +43,18 @@ class Core(Gtk.Window):
         '''Comunidad'''
         self.lbl_community = Gtk.Label()
         self.lbl_community.set_markup("<b><big>Comunidad</big></b>")
-        #"<span foreground='green'>%.2f</span>"
 
         self.lbl_community_name = Gtk.Label(label="Nombre de la comunidad")
         self.lbl_community_population = Gtk.Label(label="Población")
         self.lbl_community_promContact = Gtk.Label(label="Promedio contacto físico")
-        self.lbl_community_probContact = Gtk.Label(label="Probabilidad contacto físico")
+        self.lbl_community_probContact = Gtk.Label(label="Porcentaje probabilidad contacto físico")
         self.lbl_community_initialIfected = Gtk.Label(label="Infectados Iniciales")
 
         '''Enfermedad'''
         self.lbl_disease = Gtk.Label()
         self.lbl_disease.set_markup("<b><big>Enfermedad</big></b>")
 
-        self.lbl_disease_probInfection = Gtk.Label(label="Probabilidad de infección")
+        self.lbl_disease_probInfection = Gtk.Label(label="Porcentaje probabilidad de infección")
         self.lbl_disease_stepsEvolution = Gtk.Label(label="Pasos antes de la evolución")
 
         # Entrys
@@ -84,7 +83,7 @@ class Core(Gtk.Window):
         self.ent_disease_probInfection.set_input_purpose(2)
         self.ent_disease_probInfection.connect("changed", self.updateLabelStatus)
 
-        self.ent_disease_stepsEvolution = NumberEntry(limit=100)
+        self.ent_disease_stepsEvolution = NumberEntry()
         self.ent_disease_stepsEvolution.set_input_purpose(2)
         self.ent_disease_stepsEvolution.connect("changed", self.updateLabelStatus)
 
@@ -174,6 +173,11 @@ class Core(Gtk.Window):
         self.add(box)
 
     def updateLabelStatus(self, widget):
+        # Establecer el limite nuevo de infectados iniciales
+        if self.ent_community_population.get_text() != "":
+            self.ent_community_initialInfected.set_limit(int(self.ent_community_population.get_text()))
+
+
         for i,widget in enumerate(self.entrys):
             if widget.get_text() != "":
                 defaultText = self.labels[i].get_text().replace("[!]","")
@@ -203,11 +207,9 @@ class Core(Gtk.Window):
             dialogRunner = stepsAsker.run()
 
             self.steps = stepsAsker.steps
-            new_status = str("Ejecutando "+str(self.steps)+" pasos en: "+self.ent_community_name.get_text())
 
-            self.header.set_subtitle(new_status)
-
-            self.simulation = simulatorStarter(self.entrys,self.steps)
+            self.header.set_subtitle("Creando la comunidad")
+            self.simulation = simulatorStarter(self.entrys,self.steps,self)
 
         else:
             self.header.set_subtitle("Revisa los parámetros")

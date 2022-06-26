@@ -9,3 +9,7 @@ class Disease():
         
         self.probInfection = probInfection
         self.stepsEvolution = stepsEvolution
+
+    """ GETTERS """
+    def get_prob(self):
+        return self.probInfection

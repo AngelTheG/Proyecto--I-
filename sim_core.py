@@ -7,4 +7,8 @@ de resultados
 
 class Simulation():
     def __init__(self, community):
-        print("\n\nComunidad creada exitosamente\n\n")
+        self.community = community
+    
+    def run(self,steps):
+        for i in range(int(steps)):
+            self.community.take_step()

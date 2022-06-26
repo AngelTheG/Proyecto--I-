@@ -17,3 +17,6 @@ class NumberEntry(Gtk.Entry):
             if self.limit != 0:
                 if int(self.get_text()) > self.limit:
                     self.set_text(str(self.limit))
+            
+    def set_limit(self, limit):
+        self.limit = limit
