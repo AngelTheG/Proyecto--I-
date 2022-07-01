@@ -1,3 +1,9 @@
+"""
+Nuestro pobresillo ciudadano, compuesto de 6 funciones, las primeras 2
+relacionadas con la creación de grupos cercanos y las otras 4 relacionadas con la infección
+de grupos cercanos e infección como tal
+"""
+
 from random import randrange
 
 class Citizen():
@@ -12,6 +18,7 @@ class Citizen():
         self.status = False
         self.inmune = False
         self.infection_date = "Nunca fué infectado"
+        self.isAlive = True
 
         # Variables por Asignación
         self.buddies = []
@@ -32,6 +39,7 @@ class Citizen():
         self.infection_date = step
         self.inmune = True
         self.status = True
+        self.disease.add_infection()
         print("Ciudadano [",self.id_number,"] infectado en el paso: ",self.infection_date)
     
     # FUN - Intentar infeccion
@@ -49,7 +57,11 @@ class Citizen():
     # Fun - Actualizar estado infeccioso del ciudadano
     def evolve(self):
         if self.status:
-            print("EVOLUCION DE LA ENFERMEDAD EN CASO DE PADECERLA")
+            if self.community.get_step()-self.infection_date >= self.disease.get_stepsEvolution():
+                attempt_randnumber = randrange(100)
+                self.status = False
+                if attempt_randnumber < 50:
+                    self.isAlive = False
 
     """ GETTERS """
     def get_id(self):
@@ -64,3 +76,5 @@ class Citizen():
     def get_inmune(self):
         return self.inmune
 
+    def is_alive(self):
+        return self.isAlive

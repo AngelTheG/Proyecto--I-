@@ -12,3 +12,7 @@ class Simulation():
     def run(self,steps):
         for i in range(int(steps)):
             self.community.take_step()
+
+    def get_log(self):
+        return self.community.get_log()
+

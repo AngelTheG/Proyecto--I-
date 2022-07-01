@@ -1,3 +1,8 @@
+"""
+La versión actualizada del código de entrada con números,
+ahora incluye un límite numérico
+"""
+
 import gi
 
 gi.require_version("Gtk", "3.0")

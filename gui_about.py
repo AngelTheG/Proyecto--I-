@@ -1,3 +1,8 @@
+"""
+Esta es la clásica ventana about
+(secretamente reciclamos código del último trabajo)
+"""
+
 import gi
 
 gi.require_version("Gtk", "3.0")

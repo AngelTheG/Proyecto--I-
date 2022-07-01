@@ -1,3 +1,9 @@
+"""
+Esta ventana puede parecer un poco relleno, pero realmente se usó
+para probar el paso de información de entre ventanas, por ende objetos,
+además queda espectacular como ventana de confirmación 
+"""
+
 import gi
 
 gi.require_version("Gtk", "3.0")

@@ -1,3 +1,9 @@
+"""
+Un poco de nomenclatura en el código, como se ve algunos
+archivos poseen un prefijo, "gui" o "sim" ya que se trabajaron
+de manera paralela.
+"""
+
 import gi
 
 gi.require_version("Gtk", "3.0")
@@ -210,6 +216,14 @@ class Core(Gtk.Window):
 
             self.header.set_subtitle("Creando la comunidad")
             self.simulation = simulatorStarter(self.entrys,self.steps,self)
+            print("SIGNAL")
+            logs = self.simulation.get_log()
+            
+            # Muestreo de resultados
+            self.lss_results.clear()
+            for log in logs:
+                self.lss_results.append(log)
+            
 
         else:
             self.header.set_subtitle("Revisa los parámetros")

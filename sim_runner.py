@@ -1,5 +1,5 @@
 """
-Esta es la clase "main" del simulador, o sea la encargada de tomar los datos
+Esta es la clase "main" del simulador, o sea la encargada de administrar los datos
 recolectados en la interfaz e ingresarlos en el simulador
 
 """
@@ -36,3 +36,6 @@ class simulatorStarter():
         # GUI - Actualizar estado en ventana
         subtitle = data[0].get_text() + " - Mostrando resultados"
         gui.header.set_subtitle(subtitle)
+
+    def get_log(self):
+        return self.simulator.get_log()

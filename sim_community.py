@@ -3,10 +3,6 @@ Este es el objeto comunidad, aquí se realiza la creación de la
 población, incluyendo los grupos cercanos de cada uno de los 
 habitantes de la comunidad
 
-TO DO:
-- FUN - Intentar Infección
-- FUN - Intentar Infección(Grupos Cercanos)
-
 """
 
 from random import choice
@@ -33,6 +29,7 @@ class Community():
         # Variables por Asignación
         self.citizens = []
         self.step = 0
+        self.log = []
 
         # GUI - Actualizar estado en ventana
         subtitle = self.name + " - Generando Población"
@@ -97,6 +94,9 @@ class Community():
     def take_step(self):
         
         self.step += 1
+        active_cases = 0
+        healed_cases = 0
+        dead_cases = 0
 
         # GUI - Actualizar estado en ventana
         subtitle = self.name+" - Simulando paso ["+str(self.step)+"]"
@@ -108,6 +108,28 @@ class Community():
                 for i in range(self.promContact):
                     contact = choice(self.citizens)
                     contact.attempt_infect()
+                citizen.evolve()
+
+        # Actualizacion de registro de datos
+        for citizen in self.citizens:
+            if citizen.get_status():
+                active_cases += 1
+            else:
+                if citizen.get_inmune():
+                    if citizen.is_alive():
+                        healed_cases += 1
+                    else:
+                        dead_cases += 1
+                
+            
+
+        log_step = [self.step,
+                    active_cases,
+                    self.disease.get_cases(),
+                    dead_cases,
+                    healed_cases]
+
+        self.log.append(log_step)
 
     """ GETTERS """
     def get_name(self):
@@ -116,5 +138,8 @@ class Community():
     def get_promContact(self):
         return self.promContact
 
-    def get_steps(self):
+    def get_step(self):
         return self.step
+
+    def get_log(self):
+        return self.log
