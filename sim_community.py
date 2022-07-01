@@ -49,7 +49,7 @@ class Community():
         for citizen in self.citizens:
             
             circleIsNotCreated = True
-
+            i = 0
             while circleIsNotCreated:               
                 if citizen.enough_buddies():
                     circleIsNotCreated = False
@@ -63,7 +63,9 @@ class Community():
                         if possibleBuddy.get_id() != citizen.get_id():
                             citizen.add_buddy(possibleBuddy)
                             possibleBuddy.add_buddy(citizen)
-
+                if i == self.promContact:
+                    break
+                
         # TEMP - Imprimir lista de amigos por consola
         for citizen in self.citizens:
             print("El ciudadano ",citizen.get_id()," tiene como amigos a: [", end="")
