@@ -44,18 +44,57 @@ Los elementos que se logran ver son:
 
 ## Metodología
 El proyecto consta de 7 archivos de ejecución.
-Principalmente está el **gui_core.py** el cual como indica su nombre es el núcleo del proyecto, este hereda las clases Numbify, NoGenerated y About. Por útimo consta de los siguientes métodos:
 
-* **openFile**: Accionado por el botón Abrir, el método crea un dialogo de selección de archivo limitado a archivos .csv, una vez abierto procesará la información del archivo si es compatible y la cargará en la tabla (TreeView) en la parte inferior derecha. Es importante destacar que esto solo sucederá si se generó una tabla previamente ya que esto gatilla el proceso de evaluación automática, si se da el caso de accionar el botón sin antes haber generado una escala, se desplegará un dialogo en el que se indica la necesidad de crear una tabla previamente. Puede ocurrir que la tabla no cubra la totalidad de puntos del archivo, por lo que la calificación asignada en ese caso será "Los puntos exceden la escala generada".
+**gui_core** (Gtk.Window)
+Es el núcleo de la intefáz gráfica del usuario, en esta se llevan a cabo la gran mayoría de métodos relacionados con el despliegue de informacíón en la pantalla. Consta de los siguientes métodos:
+  * **udpateLabelStatus** este método se encarga de detectar el cambio dentro de los entrys de cada variable con el fin de cambiar la alerta en caso de tratar de iniciar la simulación con algúna variable vacía.
+  
+  * **checkEsencials** Este método se activa por el botón CONFIRMAR además se complementa con el anterior, se encarga de detectar los entrys vacíos y les       agrega una alerta a los labels correspondientes, además regula el inicio de la simulación. No se ejecutará la simulación si los parametros no están         completamente entregados.
+  
+  * **start** Método accionado por el botón de tras pasar positivamente por checkEsencials, este se encarga de recolectar y administrar la información para     entregarla al core de la simulación, este metodo además despliega la ventana donde debe ser ingresado la cantidad de pasos a simular. Antes de             finalizar agrega los datos obtenidos en la tabla de resultados.
+  
+  * **resize** Se encarga de cambiar el tamaño de la ventana.
+  
+  * **aboutShow** Muestra el diálogo ABOUT.
+  
+**gui_stepsWindow** (Gtk.Dialog)
+Es la ventana de diálogo encargada de confirmar toda la información de la simulación antes de ejecutarla, además de pedir la cantidad de pasos a simular.
 
-* **aboutShow**: Despliega una ventana About llamando a la clase antes importada.
+**gui_about** (Gtk.Dialog)
+Es la ventana de diálogo contenedora de información del proyecto.
 
-* **generate**: Calcula y muestra una tabla generada según los datos indicados.
+**sim_runner**
+Es el objeto encargado de organizar todo para la correcta ejecución de la simulación, funciona como el "main" del código encargado de la simulación, crea la comunidad, la enfermedad y las ingresa de la simulación que también es creada por este objeto (tanto la comunidad, la enfermedad y la comunidad son objetos), su único método es entregar un "log" de la comunidad.
 
-* **saveFile**: Guarda los datos desplegados en la tabla, tras cargar un archivo, dentro de un archivo pdf.
+**sim_simulation**
+Este objeto se encarga de ejecutar los pasos indicados en la comunidad que se le es entregada.
+
+**sim_comunidad**
+Este es uno de los objetos más complejos, apenas es creado genera la población indicada, circulos cercanos y por último infecta inicialmente la cantidad de personas indicadas. Excluyendo los getters el único método que tiene es:
+
+  * **take_step** Este método se encarga de realizar un paso de simulación, checkea los infectados y los hace evolucionar(curarse o morirse), infecta           círculos cercanos y añade la información a un log.
+
+**sim_disease**
+La enfermedad, este objeto es poco más que un contenedor de atributos, ya que su único método es llevar el registro de infectados.
+
+**sim_citizen**
+El ciudadano o persona, se generada con un identificador único en sim_comunidad, es el objeto más complejo del proyecto, sus métodos son:
+
+  * **add_buddy** Método activado en el momento de la generación de la comunidad, añade "amigos" o "buddies" al círculo cercano de cada persona.
+  
+  * **enough_buddies** Método accedido en previamente a add_buddy para comprobar si e ciudadano tiene los amigos suficientes o no.
+  
+  * **infect** Infección segura de un ciudadano, tras activar esto es un ciudadano este se vuelve inmune además de pasar su estado a infectado.
+  
+  * **attempt_infect** Es el intento de infección que actua de manera aleatorea en función de los parámetros entregados anteriormente, en caso de salir positiva activa el infect() del ciudadano.
+  
+  * **infect_buddies** Es un método accedido en la comprobación de la comunidad al simular un paso, este checkea la posibilidad de infección dentro de su grupo de amigos cercanos, ejecuta el attempt_infect() en todos sus cercanos.
+  
+  * **evolve** Este método comprueba el estado de infección de la persona, pasada cierta cantidad de pasos se define si la persona muere o se sana.
+
 
 ### Desarrollado por **Angel Guerrero** y **Yostin Sepúlveda**
 
 #### Gracias especiales a:
-**[Ivo Wetzel](https://stackoverflow.com/users/170224/ivo-wetzel)** Por crear el archivo [numbify.py](https://github.com/AngelTheG/Proyecto-3/blob/master/numbify.py) y publicarlo en la página de ayuda de [stack overflow](https://stackoverflow.com/questions/2726839/creating-a-pygtk-text-field-that-only-accepts-number).
+**[Ivo Wetzel](https://stackoverflow.com/users/170224/ivo-wetzel)** Por crear las bases para el archivo [numbify.py](https://github.com/AngelTheG/Proyecto--I-/blob/master/gui_numbify.py) y publicarlo en la página de ayuda de [stack overflow](https://stackoverflow.com/questions/2726839/creating-a-pygtk-text-field-that-only-accepts-number).
   
